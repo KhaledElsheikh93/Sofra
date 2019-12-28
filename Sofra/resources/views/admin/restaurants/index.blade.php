@@ -36,6 +36,7 @@
                     <th class="text-center">minimum charge</th>
                     <th class="text-center">whats app</th>
                     <th class="text-center">category</th>
+                    <th class="text-center">Restaurant payment</th>
                     <th class="text-center">state</th>
                     
                   </tr>
@@ -51,7 +52,12 @@
                        <td class="text-center">{{ $record->delivery_charge }}</td>
                        <td class="text-center">{{ $record->minimum_order }}</td>
                        <td class="text-center">{{ $record->whats }}</td>
-                       <td class="text-center">{{ optional($record->Category)->name }}</td>
+                       <td class="text-center">
+                        @foreach($record->categories as $cat)
+                          <li>{{$cat->name}}</li>
+                        @endforeach
+                       </td>
+                       <td class="text-center">{{ $record->restaurant_payment }}</td>
                        <td class="text-center">{{ $record->state }}</td>  
                                
                      </tr>

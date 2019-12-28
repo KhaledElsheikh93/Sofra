@@ -120,7 +120,7 @@ class AuthController extends Controller
         {
             if($client->pin_code == $request->pin_code)
             {
-                $client->update(['password'=>bcrypt($request->password)]);
+                $client->update(['password' => bcrypt($request->password)]);
                 return responseJson(1, "تم تغيير الرقم السري بنجاح"); 
             }
             else

@@ -24,6 +24,8 @@ class CreateRestaurantsTable extends Migration {
 			$table->boolean('state')->default(1);
 			$table->string('api_token')->nullable()->unique();
 			$table->string('pin_code')->nullable();
+			$table->integer('app_commission');
+			$table->integer('restaurant_payment');
 		});
 	}
 

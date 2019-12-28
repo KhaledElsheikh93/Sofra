@@ -10,7 +10,7 @@ class Order extends Model
 
     protected $table = 'orders';
     public $timestamps = true;
-    protected $fillable = array('client_id', 'restaurant_id', 'amount', 'total', 'cost', 'net', 'state');
+    protected $fillable = array('client_id', 'restaurant_id', 'amount', 'special_order' , 'note' , 'payment_method', 'total', 'cost', 'net', 'state' ,'commission');
 
     public function products()
     {

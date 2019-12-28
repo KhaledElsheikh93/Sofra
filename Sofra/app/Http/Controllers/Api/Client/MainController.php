@@ -113,10 +113,10 @@ class MainController extends Controller
 
         $validator = validator()->make($request->all(),[
             'restaurant_id' => 'required|exists:restaurants,id',
-            'products.*' => 'required|exists:products,id',
-            'amount' => 'required',
-            //'payment_method' => 'required|in:cash,online',
-            'address' => 'required',
+            'products.*'    => 'required|exists:products,id',
+            'amount'        => 'required',
+            'payment_method'=> 'required|in:cash,online',
+            'address'       => 'required',
         ]);
         if ($validator->fails())
         {
@@ -150,17 +150,19 @@ class MainController extends Controller
         $delivery_charge = $restaurant->delivery_charge;
         $total = $cost + $delivery_charge;
         $commission = $settings->commission * $cost;
-        $net = $total - $delivery_charge;
+        $net = $total - $commission ;
 
         $order = $request->user()->orders()->create([
             'restaurant_id' => $request->restaurant_id,
             'special_order' => $request->special_order,
+            'note'         => $request->note,
             'state'         => 'pending',
             'address'       => $request->address,
             'payment_method'=> $request->payment_method,
-            'cost'          => $request->cost,
-            'total'         => $request->total,
-            'net'           => $request->net
+            'cost'          => $cost,
+            'total'         => $total,
+            'net'           => $net,
+            'commission'    => $commission,
         ]);
 
         

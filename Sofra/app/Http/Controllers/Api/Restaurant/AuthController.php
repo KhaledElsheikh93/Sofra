@@ -27,7 +27,7 @@ class AuthController extends Controller
             'minimum_order'  => 'required',
             'contact_phone'  => 'required',
             'whats'          => 'required',
-            'category_id'    => 'required'
+           
         ]);
         if($validator->fails())
         {
@@ -110,7 +110,7 @@ class AuthController extends Controller
     public function newPassword(Request $request)
     {
         $validation = validator()->make($request->all(), [
-            'email'    => 'required|eamil',
+            'email'    => 'required|email',
             'password' => 'required|confirmed',
             'pin_code' => 'required'
         ]);
@@ -123,7 +123,8 @@ class AuthController extends Controller
         {
             if($restaurant->pin_code == $request->pin_code)
             {
-                $restaurant->update(['password' , Hash::make($request->password)]);
+                $hash = Hash::make($request->password);
+                $restaurant->update(['password' => $hash]);
                 return responseJson(1, "تم تسجيل الدخول بنجاح", [           
                     'api_token'  => $restaurant->api_token,
                     'restaurant' => $restaurant

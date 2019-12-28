@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $records = Category::paginate(10);
-        return view('admin.categories.index', compact('records'));
+        $records = Order::paginate(10);
+        return view('admin.orders.index', compact('records'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        //
     }
 
     /**
@@ -37,16 +37,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'name' => 'required'
-        ];
-        $message = [
-            'name.required' => 'Please enter category name'
-        ];
-        $this->validate($request, $rules, $message);
-        $model = Category::create($request->all());
-        flash('Category has been added')->success();
-        return redirect(route('categories.index'));
+        //
     }
 
     /**
@@ -68,8 +59,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $model = Category::findOrfail($id);
-        return view('admin.categories.edit', compact('model'));
+        //
     }
 
     /**
@@ -81,17 +71,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required'
-        ];
-        $message = [
-            'name.required' => 'Please enter category name'
-        ];
-        $this->validate($request, $rules, $message);
-        $record = Category::findOrfail($id);
-        $record->update($request->all());
-        flash('Category Edited')->success();
-        return redirect(route('categories.index'));
+        //
     }
 
     /**
@@ -102,9 +82,6 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $model = Category::findOrfail($id);
-        $model->delete();
-        flash('Category deleted')->success();
-        return back();
+        //
     }
 }

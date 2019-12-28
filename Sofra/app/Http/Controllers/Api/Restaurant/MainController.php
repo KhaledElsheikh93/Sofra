@@ -43,6 +43,22 @@ class MainController extends Controller
     }
 
 
+    public function addCategory(Request $request)
+    {
+        $validation = validator()->make($request->all(), [
+           // 'name'           => 'required',
+            'categories'          => 'required|array|exists:categories,id',
+            
+        ]);
+        if($validation->fails())
+        {
+            return responseJson(0, "validation error", $validation->errors());
+        }
+        $categories = $request->user()->categories()->attach($request->categories);
+        return responseJson(1, "نم اضافة الفئة التابع لها المطعم", $categories);
+    }
+
+
     public function categories()
     {
         $categories = Category::all();
@@ -90,6 +106,10 @@ class MainController extends Controller
 
     public function restaurantState(Request $request)
     {
+        $validation = validate()->make($request->all(), [
+            'restaurant_id' => 'required',
+            'state'         => 'required|in:open,closed'
+        ]);
         $restaurant_state = Restaurant::Select('state')->where('id', $request->id)->get();
         return responseJson(1, "success", $restaurant_state);
     }
@@ -98,7 +118,7 @@ class MainController extends Controller
     public function changeRestaurantState(Request $request)
     {
         $change_state = Restaurant::find($request->restaurant_id);
-        $request->user()->restaurants()->update(['state', $request->state]);
+        $request->user()->update(['state'=> $request->state]);
         return responseJson(1, " تم تغييير حالة المطعم");
     }
 
@@ -283,18 +303,18 @@ class MainController extends Controller
 
 
    
-    public function commisson(Request $request)
+    public function commission(Request $request)
     {
-        $restaurant_sales  = $request->user()->orders()->where('states', 'delivered')->sum('cost');
-        $app_commissions   = $request->user()->orders()->where('status', 'delivered')->sum('commisson');
-        $restaurant_payment= $request->user()->payments()->pluck('amount')->first();
-        $rest_of_commission= $app_commission-$restaurant_payment;
         $settings          = Setting::first();
         $commission        = $settings->commission * 100 . ' %';
-        //        $elahly_bank =  $setting->elahly_bank ;
-        //        $alrajhi_bank =  $setting->alrajhi_bank ;
-        return responseJson(1, "تمت العملية بنجاح", compact('restaurant_sales', 'app_commissions', 'restaurant_payment',
-         'rest_of_commission', 'commission'));
+        
+        $restaurant_sales       = $request->user()->orders()->where('state', 'delivered')->sum('total');
+        $app_commission         = $request->user()->orders()->where('state', 'delivered')->sum('commission');
+        $restaurant_payment     = $request->user()->restaurant_payment;
+        $rest_of_app_commission = $app_commission - $restaurant_payment;
+               
+        return responseJson(1, "تمت العملية بنجاح", compact('restaurant_sales', 'app_commission', 'restaurant_payment', 'rest_of_app_commission'));
+    
     }
 
 
@@ -323,12 +343,14 @@ class MainController extends Controller
                 'state'=> 'accepted'
                 ]);
             $client       = $order->client;
+            
             $notification = $client->notifications()->create([
                 'title'   => 'تم الموافقة علي طلبك',
                 'body'    => 'تم الموافقة علي طلبك من قبل المطعم'. $request->user()->name,
                 'order_id'=> $request->order_id
             ]);
-            $tokens = $client->tokens()->where('api_token', '!=', Null)->pluck('token')->toArray();
+            $tokens = $client->tokens()->where('token', '!=', Null)->pluck('token')->toArray();
+           
             if($tokens)
             {
                 $title = $notification->title;
@@ -337,14 +359,15 @@ class MainController extends Controller
                     'order_id' => $order->id
                 ];
                 $send = notifyByFirebase($title, $body, $tokens, $data);
-            }
-            $data = [
-                'order' => $order->fresh()->load('products')
-            ];
-            return responseJson(1, "تم الطلب بنجاح", [
-                'send' => $send,
-                'data' => $data
-            ]);
+                $data = [
+                    'order' => $order->fresh()->load('products')
+                ];
+                return responseJson(1, "تم الطلب بنجاح", [
+                    'send' => $send,
+                    'data' => $data
+                ]);
+            } 
+            return responseJson(1, "تم قبول الطلب");
         }
         return responseJson(0, "لا يوجد طلبات علي قائمة الانتظار");
     }

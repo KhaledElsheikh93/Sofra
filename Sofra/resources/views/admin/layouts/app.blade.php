@@ -83,7 +83,7 @@
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img src="{{ asset('adminlte/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
-          {{-- <p style="color:white">{{ auth()->user()->name }}</p> --}}
+          <p style="color:white">{{ auth()->user()->name }}</p> 
         </div>
        
       </div>
@@ -94,14 +94,14 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="" class="nav-link">
+          <a href="{{  url(route('users.index'))  }}" class="nav-link">
               <i class="	fas fa-user-circle"></i>
               <p>Users</p>
             </a>
           </li> 
 
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{{url(route('roles.index')) }}" class="nav-link">
               <i class="fas fa-atlas"></i>
               <p>Roles</p>
             </a>
@@ -139,7 +139,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link">
+          <a href="{{  url(route('products.index'))  }}" class="nav-link">
               <i class="nav-icon fas fa-pizza-slice"></i>
               <p>products</p>
             </a>
@@ -170,16 +170,23 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{{  url(route('orders.index'))  }}" class="nav-link">
               <i class="nav-icon fas fa-shopping-basket"></i>
               <p>Orders</p>
             </a>
           </li>
           
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{{ url(route('settings.index')) }}" class="nav-link">
               <i class="nav-icon nav-icon fas fa-briefcase"></i>
               <p>Settings</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ url(route('payments.index')) }}" class="nav-link">
+              <i class="nav-icon nav-icon fas fa-briefcase"></i>
+              <p>Payments</p>
             </a>
           </li>
 
@@ -191,7 +198,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{{ url('admin/users/change-password') }}" class="nav-link">
               <i class="	fas fa-address-card"></i>
               <p>Change password</p>
             </a>

@@ -46,14 +46,15 @@ Route::group(['prefix' => 'v1'], function(){
 
     Route::group(['prefix' => 'restaurant', 'namespace'=> 'Api\Restaurant'], function(){
         Route::group(['middleware' => 'auth:restaurant'], function(){
+            
             Route::post('register-token', 'AuthController@registerToken');
             Route::post('remove-token', 'AuthController@removeToken'); 
-            Route::get('profile', 'MainController@profile');
-            Route::post('edit-profile', 'MainController@editProfile');
-            Route::post('create-products', 'MainController@createProducts');
+            Route::get('profile', 'MainController@profile')->middleware('commissionBlock');
+            Route::post('edit-profile', 'MainController@editProfile')->middleware('commissionBlock');
+            Route::post('create-products', 'MainController@createProducts')->middleware('commissionBlock');
             Route::get('products', 'MainController@products');
-            Route::post('edit-products', 'MainController@editProducts');
-            Route::post('delete-products', 'MainController@deleteProducts');
+            Route::post('edit-products', 'MainController@editProducts')->middleware('commissionBlock');
+            Route::post('delete-products', 'MainController@deleteProducts')->middleware('commissionBlock');
             Route::get('show-products', 'MainController@showProducts');
             Route::get('restaurant-state', 'MainController@restaurantState');
             Route::post('change-restaurant-state', 'MainController@changeRestaurantState');
@@ -63,18 +64,18 @@ Route::group(['prefix' => 'v1'], function(){
             Route::get('reviews', 'MainController@restaurantReviews');
             Route::get('order-details', 'MainController@orderDetails');
             Route::get('restaurant-new-order', 'MainController@restaurantNewOrder');
-            Route::post('restaurant-accepted-orders', 'MainController@restaurantAcceptedOrders');
-            Route::get('restaurant-current-orders', 'MainController@restaurantCurrentOrders');
+            Route::post('restaurant-accepted-orders', 'MainController@restaurantAcceptedOrders')->middleware('commissionBlock');
+            Route::get('restaurant-current-orders', 'MainController@restaurantCurrentOrders')->middleware('commissionBlock');
             Route::post('restaurant-declined-order', 'MainController@restaurantDeclinedOrder');
-            Route::get('rejected-orders', 'MainController@rejectedOrders');
+            Route::get('rejected-orders', 'MainController@rejectedOrders')->middleware('commissionBlock');
             Route::get('delivered-orders', 'MainController@deliveredOrders');
-
-
-            
-
-            
+            Route::get('commission', 'MainController@commission');
+            Route::post('add-categories', 'MainController@addCategory');
+              
 
         });
+
+        
         Route::get('cities', 'MainController@cities');
         Route::get('districts', 'MainController@districts');
         Route::post('register','AuthController@register');
@@ -83,7 +84,7 @@ Route::group(['prefix' => 'v1'], function(){
         Route::post('new-password', 'AuthController@newPassword');
         Route::get('settings', 'MainController@settings');
         Route::get('categories', 'MainController@categories');
-             
+        
     });
 
 });

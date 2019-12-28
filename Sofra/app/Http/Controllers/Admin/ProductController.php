@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
+use App\Models\Product;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $records = Category::paginate(10);
-        return view('admin.categories.index', compact('records'));
+        $records = Product::paginate(10);
+        return view('admin.products.index', compact('records'));
     }
 
     /**
@@ -26,7 +27,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $restaurants = Restaurant::all();
+        return view('admin.products.create', compact('restaurants'));
     }
 
     /**
@@ -38,15 +40,19 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required'
+            'name'         => 'required',
+            'price'        => 'required',
+            'restaurant_id'=> 'required'
         ];
         $message = [
-            'name.required' => 'Please enter category name'
+            'name.required'         => 'Enter product name',
+            'price.required'        => 'Enter the price',
+            'restaurant_id.required'=> 'Choose restaurant'
         ];
         $this->validate($request, $rules, $message);
-        $model = Category::create($request->all());
-        flash('Category has been added')->success();
-        return redirect(route('categories.index'));
+        $records= Product::create($request->all());
+        flash('Product Added')->success();
+        return redirect(route('products.index'));
     }
 
     /**
@@ -68,8 +74,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $model = Category::findOrfail($id);
-        return view('admin.categories.edit', compact('model'));
+        $model      = Product::findOrfail($id);
+        $restaurants= Restaurant::all();
+        return view('admin.products.edit', compact(['model', 'restaurants']));
     }
 
     /**
@@ -82,16 +89,21 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => 'required'
+            'name'         => 'required',
+            'price'        => 'required',
+            'restaurant_id'=> 'required'
         ];
         $message = [
-            'name.required' => 'Please enter category name'
+            'name.required'         => 'Enter product name',
+            'price.required'        => 'Enter the price',
+            'restaurant_id.required'=> 'Choose restaurant'
         ];
         $this->validate($request, $rules, $message);
-        $record = Category::findOrfail($id);
-        $record->update($request->all());
-        flash('Category Edited')->success();
-        return redirect(route('categories.index'));
+
+        $model = Product::findOrfail($id);
+        $model->update($request->all());
+        flash('Product edited')->success();
+        return redirect(route('products.index'));
     }
 
     /**
@@ -102,9 +114,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $model = Category::findOrfail($id);
-        $model->delete();
-        flash('Category deleted')->success();
+        $record = Product::findOrfail($id);
+        $record->delete();
+        flash('Deleted')->success();
         return back();
     }
 }

@@ -12,7 +12,11 @@
 
 @inject('restaurants', 'App\Models\Restaurant')
 
-{{-- @inject('users', 'App\User') --}}
+@inject('products', 'App\Models\Product')
+
+@inject('orders', 'App\Models\Order')
+
+@inject('users', 'App\User')
 
 
 
@@ -30,80 +34,95 @@
 
 <div class="row">
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
-    <div class="info-box">
-              <span class="info-box-icon bg-info">
-                  <i class="ion ion-ios-people-outline"></i>
-              </span>
-              <div class="info-box-content">
-                  <span class="info-box-text">Users</span>
-                  {{-- <span class="info-box-number">{{ $users->count() }}</span> --}}
-              </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 col-sm-6 col-xs-12">
-    <div class="info-box">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
             <span class="info-box-icon bg-info">
-               <i class="ion ion-ios-people-outline"></i>
+                <i class="ion ion-ios-people-outline"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Users</span>
+                <span class="info-box-number">{{ $users->count() }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-info">
+                <i class="ion ion-ios-people-outline"></i>
             </span>
             <div class="info-box-content">
                 <span class="info-box-text">Clients</span>
                 <span class="info-box-number">{{ $client->count() }}</span>
             </div>
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green">
+               <i class="fas fa-home" ></i>
+            </span>
+            <div class="info-box-content">
+               <span class="info-box-text">Cities</span>
+               <span class="info-box-number">{{ $cities->count() }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
       <div class="info-box">
-          <span class="info-box-icon bg-red">
-              <i class="fas fa-shopping-basket" ></i>
-          </span>
+          <span class="info-box-icon bg-blue">
+              <i class="fas fa-home" ></i></span>
           <div class="info-box-content">
-              <span class="info-box-text">Orders</span>
-              {{-- <span class="info-box-number">{{ $donation_requests->count() }}</span> --}}
+              <span class="info-box-text">Districts</span>
+              <span class="info-box-number">{{ $districts->count() }}</span>
           </div>
       </div>
-  </div>
-  
+    </div>
+
 </div>
 
 <div class="row">
 
-  <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-          <span class="info-box-icon bg-green">
-             <i class="fas fa-door-open" ></i>
-          </span>
-          <div class="info-box-content">
-              <span class="info-box-text">Restaurants</span>
-              <span class="info-box-number">{{ $restaurants->count() }}</span>
-          </div>
-      </div>
-  </div>
-
-  <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-          <span class="info-box-icon bg-green">
-              <i class="fas fa-home" ></i>
-          </span>
-          <div class="info-box-content">
-              <span class="info-box-text">Cities</span>
-              <span class="info-box-number">{{ $cities->count() }}</span>
-          </div>
-      </div>
-  </div>
-
-  <div class="col-md-3 col-sm-6 col-xs-12">
-      <div class="info-box">
-          <span class="info-box-icon bg-blue"><i class="fas fa-home" ></i></span>
-              <div class="info-box-content">
-                  <span class="info-box-text">Districts</span>
-                  <span class="info-box-number">{{ $districts->count() }}</span>
-              </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fas fa-door-open" ></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Restaurants</span>
+                <span class="info-box-number">{{ $restaurants->count() }}</span>
+            </div>
         </div>
-  </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fas fa-door-open" ></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Products</span>
+                <span class="info-box-number">{{ $products->count() }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red">
+                <i class="fas fa-shopping-basket" ></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Orders</span>
+                <span class="info-box-number">{{ $orders->count() }}</span>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 
 <!-- Default box -->
 <div class="card">

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
+use App\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $records = Category::paginate(10);
-        return view('admin.categories.index', compact('records'));
-    }
+        $records = Role::paginate(10);
+        return view('admin.roles.index', compact('records'));    }
 
     /**
      * Show the form for creating a new resource.
@@ -26,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        return view('admin.roles.create');
     }
 
     /**
@@ -38,15 +37,23 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required'
+            'name'             => 'required|unique:roles',
+            'display_name'     => 'required',
+            'permissions_list' => 'required|array'
         ];
-        $message = [
-            'name.required' => 'Please enter category name'
+
+        $messages = [
+            'name.required'              => 'Role name is required',
+            'display_name.required'      => 'Enter display name',
+            'permissions_list.required'  => 'You should have permission'
         ];
-        $this->validate($request, $rules, $message);
-        $model = Category::create($request->all());
-        flash('Category has been added')->success();
-        return redirect(route('categories.index'));
+
+       $this->validate($request,$rules,$messages);
+
+       $model = Role::create($request->all());
+       $model->permissions()->attach($request->permissions_list);
+       flash('Role added successfully');
+       return redirect(route('roles.index'));
     }
 
     /**
@@ -68,8 +75,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $model = Category::findOrfail($id);
-        return view('admin.categories.edit', compact('model'));
+        $model = Role::findOrfail($id);
+        return view('admin.roles.edit',compact('model'));
     }
 
     /**
@@ -82,16 +89,21 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => 'required'
+            'name'             => 'required|unique:roles,name,'.$id,
+            'display_name'     => 'required',
+            'permissions_list' => 'required|array'
         ];
-        $message = [
-            'name.required' => 'Please enter category name'
+        $message =[
+            'name.required'              => 'name is required',
+            'display_name.required'      => 'Enter display name',
+            'permissions_list.required'  => 'You should have permission'
         ];
         $this->validate($request, $rules, $message);
-        $record = Category::findOrfail($id);
+        $record = Role::findOrfail($id);
         $record->update($request->all());
-        flash('Category Edited')->success();
-        return redirect(route('categories.index'));
+        $record->permissions()->sync($request->permissions_list);
+        flash('Role Edited')->success();
+        return redirect(route('roles.index'));
     }
 
     /**
@@ -102,9 +114,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $model = Category::findOrfail($id);
-        $model->delete();
-        flash('Category deleted')->success();
+        $record = Role::findOrfail($id);
+        $record->delete();
+        flash('Deleted')->success();
         return back();
     }
 }

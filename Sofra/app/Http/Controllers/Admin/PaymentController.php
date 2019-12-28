@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
+use App\Models\Payment;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $records = Category::paginate(10);
-        return view('admin.categories.index', compact('records'));
+        $records = Payment::paginate(10);
+        return view('admin.payments.index', compact('records'));
     }
 
     /**
@@ -26,7 +27,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $restaurants = Restaurant::all();
+        return view('admin.payments.create', compact('restaurants'));
     }
 
     /**
@@ -38,15 +40,25 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required'
+            
+            'restaurant_id' => 'required',
+            'paid'          => 'required',
+            'notes'         => 'required'
         ];
         $message = [
-            'name.required' => 'Please enter category name'
+            
+            'restaurant_id.required' => 'please choose resturant',
+            'paid.required'          => 'please insert the payments',
+            'notes.required'         => 'please insert notes'
         ];
         $this->validate($request, $rules, $message);
-        $model = Category::create($request->all());
-        flash('Category has been added')->success();
-        return redirect(route('categories.index'));
+        $restaurant = Restaurant::findOrFail($request->restaurant_id);
+        $records = $restaurant->payments()->create($request->all());
+        $payment = $restaurant->payments()->sum('paid');
+        $restaurant->update(['restaurant_payment' => $payment]);
+        flash('your payment has been added')->success();
+        return redirect(route('payments.index'));
+
     }
 
     /**
@@ -68,8 +80,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $model = Category::findOrfail($id);
-        return view('admin.categories.edit', compact('model'));
+        $model       = Payment::findOrfail($id);
+        return view('admin.payments.edit', compact('model'));
     }
 
     /**
@@ -81,17 +93,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required'
-        ];
-        $message = [
-            'name.required' => 'Please enter category name'
-        ];
-        $this->validate($request, $rules, $message);
-        $record = Category::findOrfail($id);
+        $record = Payment::findOrfail($id);
         $record->update($request->all());
-        flash('Category Edited')->success();
-        return redirect(route('categories.index'));
+        flash('Payments Edited')->success();
+        return redirect(route('payments.index'));
     }
 
     /**
@@ -102,9 +107,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $model = Category::findOrfail($id);
-        $model->delete();
-        flash('Category deleted')->success();
+        $record = Payment::findOrfail($id);
+        $record->delete();
+        flash('Deleted')->success();
         return back();
     }
 }
